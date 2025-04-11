@@ -1,0 +1,45 @@
+# Python virtual environment
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# macOS system files
+.DS_Store
+
+# Logs and temporary files
+*.log
+*.pid
+*.seed
+*.swp
+
+# Database-related files (if any)
+*.sql
+*.sqlite3
+
+# Dependency directories
+/dist/
+/build/
+*.egg-info/
+
+# Uvicorn/FastAPI temporary files
+*.sock
+
+# Testing and coverage
+.coverage
+coverage.*
+.pytest_cache/
