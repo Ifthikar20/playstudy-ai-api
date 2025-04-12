@@ -1,14 +1,19 @@
-from pydantic import BaseModel
+# schemas.py
+from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from typing import Optional
 
 class UserBase(BaseModel):
-    email: str
+    email: EmailStr
     name: Optional[str] = None
     image: Optional[str] = None
 
 class UserCreate(UserBase):
-    id: str
+    password: str
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
 
 class UserResponse(UserBase):
     id: str
