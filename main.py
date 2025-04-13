@@ -1,10 +1,20 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware  # ⬅️ Add this
 from fastapi.openapi.utils import get_openapi
 
 from database import Base, engine
 from routers import users, scores, notes
 
 app = FastAPI()
+
+# ✅ Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # frontend dev server
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Create all DB tables
 Base.metadata.create_all(bind=engine)

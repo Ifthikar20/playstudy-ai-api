@@ -73,41 +73,22 @@ async def login_for_access_token(
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.get("/me", response_model=UserResponse)
-async def get_current_user_info(current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
-    db_user = db.query(User).filter(User.id == current_user["user_id"]).first()
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return db_user
-
-@router.put("/me", response_model=UserResponse)
-async def update_user(
-    user_data: UserCreate, 
-    current_user: dict = Depends(get_current_user), 
+async def get_current_user_info(
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     db_user = db.query(User).filter(User.id == current_user["user_id"]).first()
+
     if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    # Check if updating to an email that already exists
-    if user_data.email != db_user.email:
-        existing_user = db.query(User).filter(User.email == user_data.email).first()
-        if existing_user:
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="User with this email already exists"
-            )
-    
-    # Update user data
-    db_user.email = user_data.email
-    if user_data.password:
-        db_user.password_hash = generate_password_hash(user_data.password)
-    if user_data.name:
-        db_user.name = user_data.name
-    if user_data.image:
-        db_user.image = user_data.image
-    
-    db.commit()
-    db.refresh(db_user)
-    
+        print(f"👤 User not found in DB. Auto-creating user: {current_user['email']}")
+        db_user = User(
+            id=current_user["user_id"],
+            email=current_user["email"],
+            name=current_user["name"],
+            image=current_user["image"],
+        )
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+
     return db_user

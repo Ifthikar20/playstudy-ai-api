@@ -1,4 +1,3 @@
-# models.py
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from database import Base
@@ -9,13 +8,14 @@ class User(Base):
 
     id = Column(String, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
-    password_hash = Column(String, nullable=False)  # Added password_hash
+    password_hash = Column(String, nullable=True)  # ✅ Allow null for OAuth users
     name = Column(String, nullable=True)
     image = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     scores = relationship("Score", back_populates="user")
     notes = relationship("Note", back_populates="user")
+
 
 class Score(Base):
     __tablename__ = "scores"
@@ -27,6 +27,7 @@ class Score(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="scores")
+
 
 class Note(Base):
     __tablename__ = "notes"
